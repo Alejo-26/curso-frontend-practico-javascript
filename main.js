@@ -3,12 +3,16 @@ const desktopMenu = document.querySelector('.desktop-menu');
 const menuHamIcon = document.querySelector('.menu');
 const mobileMenu = document.querySelector('.mobile-menu');
 const menuCartIcon = document.querySelector('.navbar-shopping-cart');
+const productDetailCloseIcon = document.querySelector('.product-detail-close');
+
 const shoppingCartContainer = document.querySelector('#shoppingCartContainer');
+const productDetailContainer = document.querySelector('#productDetail');
 const cardsContainer = document.querySelector('.cards-container');
 
 menuEmail.addEventListener('click', toggleDesktopMenu);
 menuHamIcon.addEventListener('click', toggleMobileMenu);
 menuCartIcon.addEventListener('click', toggleCartAside);
+productDetailCloseIcon.addEventListener('click', closeProductDetailAside);
 
 
 function toggleDesktopMenu(){
@@ -32,6 +36,8 @@ function toggleMobileMenu() {
         shoppingCartContainer.classList.add('inactive');
     }
 
+    closeProductDetailAside();
+
     mobileMenu.classList.toggle('inactive');
 }
 
@@ -45,8 +51,27 @@ function toggleCartAside(){
     if (!isMobileMenuClosed){
         mobileMenu.classList.add('inactive')
     }
-    shoppingCartContainer.classList.toggle('inactive');
 
+    const isProductDetailClosed = productDetailContainer.classList.contains('inactive');
+
+    //if product detail is open, we have to close it before open the Cart Aside
+    if (!isProductDetailClosed){
+        productDetailContainer.classList.add('inactive')
+    }
+    shoppingCartContainer.classList.toggle('inactive')
+
+}
+
+function openProductDetailAside(){
+    //to avoid open problems with the Shopping Cart
+    shoppingCartContainer.classList.add('inactive');
+    // we want to take off the class inactive to show the element
+    productDetailContainer.classList.remove('inactive');
+}
+
+function closeProductDetailAside(){
+    // we want to take off the class inactive to show the element
+    productDetailContainer.classList.add('inactive');
 }
 
 console.log('JS working')
@@ -137,6 +162,7 @@ function renderProducts(array){
         // product = {name, price, image} -> product.image
         const productImg = document.createElement('img');
         productImg.setAttribute('src', product.image);
+        productImg.addEventListener('click', openProductDetailAside);
     
         const productInfo = document.createElement('div');
         productInfo.classList.add('product-info');
